@@ -40,7 +40,7 @@ namespace SchoolMgmtAPI.Controllers
         /// Gets the list of all organizations
         /// </summary>
         /// <returns>The organizations list</returns>
-        [HttpGet(Name = "GetOrganizations"), Authorize (Roles = "Administrator")]
+        [HttpGet(Name = "GetOrganizations")]
 
         public async Task <IActionResult> GetOrganizations()
         {
@@ -107,7 +107,7 @@ namespace SchoolMgmtAPI.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>
         /// <response code="422">If the model is invalid</response>
-        [HttpPost(Name = "CreateOrganization")]
+        [HttpPost(Name = "CreateOrganization"), Authorize(Roles = "Administrator")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
@@ -128,7 +128,7 @@ namespace SchoolMgmtAPI.Controllers
                 new { id = organizationToReturn.Id }, organizationToReturn);
         }
 
-        [HttpPost("collection")]
+        [HttpPost("collection"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task < IActionResult> CreateOrganizationCollection([FromBody]
         IEnumerable<OrganizationForCreationDto> organizationCollection)
@@ -149,7 +149,7 @@ namespace SchoolMgmtAPI.Controllers
             return CreatedAtRoute("OrganizationCollection", new { ids }, organizationCollectionToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateOrganizationExistsAttribute))]
         public async Task < IActionResult> DeleteOrganization(Guid id)
         {
@@ -161,7 +161,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateOrganizationExistsAttribute))]
         public async Task <IActionResult> UpdateOrganization(Guid id, [FromBody] OrganizationForUpdateDto organization)
@@ -176,7 +176,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateOrganizationExistsAttribute))]
         public async Task <IActionResult> PartiallyUpdateOrganization( Guid id, [FromBody] JsonPatchDocument<OrganizationForUpdateDto> patchDoc)
         {

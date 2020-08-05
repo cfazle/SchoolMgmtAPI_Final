@@ -6,6 +6,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
@@ -85,7 +86,7 @@ namespace SchoolMgmtAPI.Controllers
             return Ok(course);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateCourseForOrganization( Guid orgId, [FromBody]
         CourseForCreationDto course)
@@ -101,7 +102,7 @@ namespace SchoolMgmtAPI.Controllers
             return CreatedAtRoute( new { orgId, id = courseToReturn.Id }, courseToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateCourseExistsAttribute))]
         public async Task <IActionResult> DeleteCourseForOrganization(Guid orgId, Guid id)
         {
@@ -117,7 +118,7 @@ namespace SchoolMgmtAPI.Controllers
 
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateCourseExistsAttribute))]
         public async Task <IActionResult> UpdateCourseForOrganization(Guid orgId, Guid id, [FromBody] 
@@ -133,7 +134,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateCourseExistsAttribute))]
         public async Task <IActionResult> PartiallyUpdateCourseForOrganization(Guid orgId, 
             Guid id, [FromBody] JsonPatchDocument<CourseForUpdateDto> patchDoc)

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SchoolMgmtAPI.ActionFilters;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SchoolMgmtAPI.Controllers
 {
@@ -72,7 +73,7 @@ namespace SchoolMgmtAPI.Controllers
             return Ok(section);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task <IActionResult> CreateSectionForCourse(Guid courseId, [FromBody] SectionForCreationDto section)
         {
@@ -88,7 +89,7 @@ namespace SchoolMgmtAPI.Controllers
             return CreatedAtRoute(new { courseId, id = sectionToReturn.Id }, sectionToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateSectionExistsAttribute))]
         public async Task <IActionResult> DeleteSectionForCourse(Guid courseId, Guid id)
         {
@@ -101,7 +102,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateSectionExistsAttribute))]
         public async Task <IActionResult> UpdateSectionForCourse(Guid courseId, Guid id, [FromBody] SectionForUpdateDto section)
@@ -116,7 +117,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateSectionExistsAttribute))]
         public async Task < IActionResult> PartiallyUpdateSectionForCourse(Guid courseId, Guid id, [FromBody] JsonPatchDocument<SectionForUpdateDto> patchDoc)
         {

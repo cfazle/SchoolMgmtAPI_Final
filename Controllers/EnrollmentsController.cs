@@ -6,6 +6,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -28,7 +29,7 @@ namespace SchoolMgmtAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Administrator")]
         public async Task < IActionResult> GetEnrollmentsForSection(Guid sectionId, [FromQuery] 
        EnrollmentParameters enrollmentParameters )
 
@@ -49,7 +50,7 @@ namespace SchoolMgmtAPI.Controllers
             return Ok(enrollmentsDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "Administrator")]
         public async Task <IActionResult> GetEnrollmentForSection(Guid sectionId, Guid id)
         {
             var organization = await _repository.Section.GetSectionsAsync(sectionId,  trackChanges: false);
@@ -71,7 +72,7 @@ namespace SchoolMgmtAPI.Controllers
             return Ok(enrollment);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
 
         public async Task < IActionResult> CreateEnrollmentForSection(Guid sectionId, [FromBody] EnrollmentForCreationDto enrollment)
@@ -88,7 +89,7 @@ namespace SchoolMgmtAPI.Controllers
             return CreatedAtRoute(new { sectionId, id = enrollmentToReturn.Id }, enrollmentToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateEnrollmentExistsAttribute))]
         public async Task <IActionResult> DeleteEnrollmentForSection(Guid sectionId, Guid id)
         {
@@ -100,7 +101,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateEnrollmentExistsAttribute))]
         public async Task <IActionResult> UpdateEnrollmentForSection(Guid sectionId, Guid id, [FromBody] EnrollmentForUpdateDto enrollment)
@@ -115,7 +116,7 @@ namespace SchoolMgmtAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Administrator")]
         [ServiceFilter(typeof(ValidateEnrollmentExistsAttribute))]
         public async Task < IActionResult> PartiallyUpdateEnrollmentForSection(Guid sectionId, Guid id, [FromBody] JsonPatchDocument<EnrollmentForUpdateDto> patchDoc)
         {
