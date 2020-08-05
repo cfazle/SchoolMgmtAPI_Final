@@ -1,2 +1,3 @@
-# SchoolMgmtAPI_v1.1_module5
-Added the logging service to the project
+# SchoolMgmt_Finale
+User Registration
+https://github.com/cfazle/SchoolMgmtAPI_Final/blob/master/Images/User%20Registration.PNG
